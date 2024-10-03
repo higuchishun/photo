@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像から個数を読み取る</title>
+</head>
+<body>
+    <h1>画像から個数を読み取る</h1>
+    <input type="file" id="imageInput" accept="image/*">
+    <button id="analyzeButton">解析する</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('analyzeButton').addEventListener('click', async () => {
+            const input = document.getElementById('imageInput');
+            if (input.files.length === 0) {
+                alert('画像をアップロードしてください。');
+                return;
+            }
+            
+            const file = input.files[0];
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+
+            img.onload = async () => {
+                // ここで画像解析の処理を行います
+                // 例えば、TensorFlow.jsを使ったオブジェクト検出など
+
+                // ダミーの結果
+                const count = Math.floor(Math.random() * 10) + 1; // 1〜10のランダムな数を生成
+
+                document.getElementById('result').innerText = `検出した個数: ${count}`;
+            };
+        });
+    </script>
+</body>
+</html>
