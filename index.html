@@ -1,38 +1,36 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>画像から個数を読み取る</title>
+    <title>Object Counting</title>
 </head>
 <body>
-    <h1>画像から個数を読み取る</h1>
-    <input type="file" id="imageInput" accept="image/*">
-    <button id="analyzeButton">解析する</button>
+    <h1>Upload Image to Count Objects</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageInput" accept="image/*" />
+        <button type="button" onclick="uploadImage()">Count Objects</button>
+    </form>
     <div id="result"></div>
 
     <script>
-        document.getElementById('analyzeButton').addEventListener('click', async () => {
-            const input = document.getElementById('imageInput');
-            if (input.files.length === 0) {
-                alert('画像をアップロードしてください。');
-                return;
-            }
-            
-            const file = input.files[0];
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
+        function uploadImage() {
+            const imageInput = document.getElementById('imageInput');
+            const formData = new FormData();
+            formData.append('image', imageInput.files[0]);
 
-            img.onload = async () => {
-                // ここで画像解析の処理を行います
-                // 例えば、TensorFlow.jsを使ったオブジェクト検出など
-
-                // ダミーの結果
-                const count = Math.floor(Math.random() * 10) + 1; // 1〜10のランダムな数を生成
-
-                document.getElementById('result').innerText = `検出した個数: ${count}`;
-            };
-        });
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = `Detected objects: ${data.count}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
     </script>
 </body>
 </html>
